@@ -1,16 +1,23 @@
-# -*- coding:UTF-8 -*-
-#import urllib
-import urllib2
+# -*- coding:utf-8 -*-
 
-def download(url, user_agent:'wswp', num_retries = 2):
-	print "Downloading:", url
-	headers = ('User-agent': user_agent)
-	request = urllib2.Request(url, headers = headers)
-	
-	try:
-		html = urllib2.urlopen(url).read()
-	except urllib2.URLError as e:
-		print "Download error:", e.reason
-		html = None
-	return html
- 
+import urllib2
+import re
+
+url = "http://news.upc.edu.cn/sdyw/"
+response = urllib2.urlopen(url)
+html = response.read()
+
+#跟据正则表达式抓取内容
+
+r=re.compile(r"<a href='/(?P<Date>.{9}).*' target='_blank' title='(?P<Title>.+)' alt='.*</a>")
+news = r.findall(html)
+
+
+
+for i in range(len(news)):
+	date = news[i][0]
+	title = news[i][1]
+	print title +" "+ date
+
+
+
